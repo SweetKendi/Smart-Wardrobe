@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
-from time import sleep
-import sys
+import dht11
+import time
 import tkinter as tk
 from tkinter import messagebox
 from mfrc522 import SimpleMFRC522
@@ -18,6 +18,47 @@ bot_token = '6584510597:AAHe3yzXCntJJbuyjFrihapke83QtXl_LLc'
 chat_id = '5284112161'
 clothing_type_var = None
 outfit_entry = None
+
+
+
+def init():
+    GPIO.setmode(GPIO.BCM)
+    global dht11_inst
+
+    dht11_inst = dht11.DHT11(pin=21)  # read data using pin 21
+
+def read_temp_humidity():
+
+    global dht11_inst
+
+    ret = [-100, -100]
+
+    result = dht11_inst.read()
+
+    if result.is_valid():
+        print("Temperature: %-3.1f C" % result.temperature)
+        print("Humidity: %-3.1f %%" % result.humidity)
+
+        ret[0] = result.temperature
+        ret[1] = result.humidity
+
+    return ret
+
+def data_upload(temp,humidity):
+    API_KEY = 'WI07W335WKLRGCY9'
+    data = {
+        'field1': temp,
+        'field2': humidity,
+        'key': API_KEY
+    }
+    response = requests.post('https://api.thingspeak.com/update', data=data)
+    print(response.text)  # This will print the entry ID if successful, or '0' if there was an error.
+
+if __name__ == "__main__":
+    init()
+    while True:
+        read_temp_humidity()
+        time.sleep(10*60)
 
 def send_telegram_message(bot_token, chat_id, message):
     base_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
@@ -165,20 +206,8 @@ def main():
     title_label.pack(pady=20)
 
     # Input fields frame
-    outfit_label = tk.Label(root, text="Enter Outfit:")
-    outfit_label.pack(pady=5)
-    outfit_entry = tk.Entry(root)
-    outfit_entry.pack(pady=5)
-
-    clothing_type_label = tk.Label(root, text="Choose Clothing Type:")
-    clothing_type_label.pack(pady=5)
-    clothing_type_var = tk.StringVar(root)
-    clothing_type_var.set("lightwear")  # default value
-    clothing_type_dropdown = tk.OptionMenu(root, clothing_type_var, "lightwear", "layered")
-    clothing_type_dropdown.pack(pady=5)
-
-    register_button = tk.Button(root, text="Register Card", command=register_card)
-    register_button.pack(pady=10)
+    input_frame = tk.Frame(main_frame, bg="#e0e0e0")
+    input_frame.pack(pady=20)
 
     # Outfit Entry
     outfit_label = tk.Label(input_frame, text="Enter Outfit:", font=("Helvetica", 14), bg="#e0e0e0")

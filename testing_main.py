@@ -162,7 +162,7 @@ root.title("Smart Wardrobe with RFID")
 main_frame = tk.Frame(root, bg="#e0e0e0", padx=20, pady=20)
 main_frame.pack(padx=15, pady=15)
 
-title_label = tk.Label(main_frame, text="Smart Wardrobe with RFID", font=("Helvetica", 20, "bold"), bg="#e0e0e0")
+title_label = tk.Label(main_frame, text="Welcome to SmartGlamour!", font=("Helvetica", 20, "bold"), bg="#e0e0e0")
 title_label.pack(pady=20)
 
 # Input fields frame

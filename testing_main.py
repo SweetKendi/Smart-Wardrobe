@@ -46,6 +46,7 @@ def recommend_outfit(temperature, humidity):
             outfit_label.config(text="No layered outfit available in inventory")
 
 
+
 # Function to fetch weather data from ThingSpeak API
 def fetch_weather():
     # Replace <YOUR_API_KEY> with your actual API key from ThingSpeak
@@ -55,7 +56,7 @@ def fetch_weather():
     channel_id = "<CHANNEL_ID>"
 
     # URL for the ThingSpeak API
-    url = f"https://api.thingspeak.com/channels/2236351/feeds.json?api_key=6UORRYZ5685J9MHG&results=2"
+    url = f"https://api.thingspeak.com/channels/2237295/fields/1,2.json?api_key=30MHG4PGDPP1E2G4&results=2"
 
     try:
         response = requests.get(url)
@@ -77,10 +78,6 @@ def fetch_weather():
             weather_label.config(text="Weather data not available")
     except requests.RequestException:
         weather_label.config(text="Failed to fetch weather data")
-
-
-    # Send the recommended outfit via Telegram
-
 
 
 def clear_database():
@@ -129,7 +126,7 @@ def register_card():
 
 def check_details():
     #id = reader.read_id()
-    id = str(id)
+    #id = str(id)
 
     with open("authlist.txt", "r") as f:
         auth = f.read()
@@ -154,55 +151,50 @@ def check_details():
     else:
         messagebox.showinfo("Card Not Found", f"Card with UID {id} not found in database; access denied")
 
-def main():
-    root = tk.Tk()
-    root.title("Smart Wardrobe with RFID")
 
-    # Main Frame
-    main_frame = tk.Frame(root, bg="#e0e0e0", padx=20, pady=20)
-    main_frame.pack(padx=15, pady=15)
+root = tk.Tk()
+root.title("Smart Wardrobe with RFID")
 
-    title_label = tk.Label(main_frame, text="Smart Wardrobe with RFID", font=("Helvetica", 20, "bold"), bg="#e0e0e0")
-    title_label.pack(pady=20)
+# Main Frame
+main_frame = tk.Frame(root, bg="#e0e0e0", padx=20, pady=20)
+main_frame.pack(padx=15, pady=15)
 
-    # Input fields frame
-    input_frame = tk.Frame(main_frame, bg="#e0e0e0")
-    input_frame.pack(pady=20)
+title_label = tk.Label(main_frame, text="Smart Wardrobe with RFID", font=("Helvetica", 20, "bold"), bg="#e0e0e0")
+title_label.pack(pady=20)
 
-    # Outfit Entry
-    outfit_label = tk.Label(input_frame, text="Enter Outfit:", font=("Helvetica", 14), bg="#e0e0e0")
-    outfit_label.grid(row=0, column=0, padx=10, pady=10)
-    outfit_entry = tk.Entry(input_frame, font=("Helvetica", 12))
-    outfit_entry.grid(row=0, column=1, padx=10, pady=10)
+# Input fields frame
+input_frame = tk.Frame(main_frame, bg="#e0e0e0")
+input_frame.pack(pady=20)
 
-    # Clothing Type Dropdown
-    clothing_type_label = tk.Label(input_frame, text="Choose Clothing Type:", font=("Helvetica", 14), bg="#e0e0e0")
-    clothing_type_label.grid(row=1, column=0, padx=10, pady=10)
-    clothing_type_var = tk.StringVar(root)
-    clothing_type_var.set("lightwear")
-    clothing_type_dropdown = tk.OptionMenu(input_frame, clothing_type_var, "lightwear", "layered")
-    clothing_type_dropdown.grid(row=1, column=1, padx=10, pady=10)
+# Outfit Entry
+outfit_label = tk.Label(input_frame, text="Enter Outfit:", font=("Helvetica", 14), bg="#e0e0e0")
+outfit_label.grid(row=0, column=0, padx=10, pady=10)
+outfit_entry = tk.Entry(input_frame, font=("Helvetica", 12))
+outfit_entry.grid(row=0, column=1, padx=10, pady=10)
 
-    # Buttons
-    register_button = tk.Button(main_frame, text="Register Card", command=register_card, font=("Helvetica", 14), bg="#4CAF50", fg="white", width=15)
-    register_button.pack(pady=10)
+# Clothing Type Dropdown
+clothing_type_label = tk.Label(input_frame, text="Choose Clothing Type:", font=("Helvetica", 14), bg="#e0e0e0")
+clothing_type_label.grid(row=1, column=0, padx=10, pady=10)
+clothing_type_var = tk.StringVar(root)
+clothing_type_var.set("lightwear")
+clothing_type_dropdown = tk.OptionMenu(input_frame, clothing_type_var, "lightwear", "layered")
+clothing_type_dropdown.grid(row=1, column=1, padx=10, pady=10)
 
-    check_button = tk.Button(main_frame, text="Check Details", command=check_details, font=("Helvetica", 14), bg="#2196F3", fg="white", width=15)
-    check_button.pack(pady=10)
+# Buttons
+register_button = tk.Button(main_frame, text="Register Card", command=register_card, font=("Helvetica", 14), bg="#4CAF50", fg="white", width=15)
+register_button.pack(pady=10)
 
-    fetch_button = tk.Button(main_frame, text="Fetch Weather", command=fetch_weather, font=("Helvetica", 14), bg="#FFC107", width=15)
-    fetch_button.pack(pady=10)
+check_button = tk.Button(main_frame, text="Check Details", command=check_details, font=("Helvetica", 14), bg="#2196F3", fg="white", width=15)
+check_button.pack(pady=10)
 
-    recommend_button = tk.Button(main_frame, text="Recommend Outfit", command=recommend_outfit, font=("Helvetica", 14), bg="#9C27B0", fg="white", width=15)
-    recommend_button.pack(pady=10)
+fetch_button = tk.Button(main_frame, text="Generate Outfit", command=fetch_weather, font=("Helvetica", 14), bg="#FFC107", width=15)
+fetch_button.pack(pady=10)
 
-    weather_label = tk.Label(main_frame, text="Weather: ", font=("Helvetica", 12), bg="#e0e0e0")
-    weather_label.pack(pady=10)
+weather_label = tk.Label(main_frame, text="Weather: ", font=("Helvetica", 12), bg="#e0e0e0")
+weather_label.pack(pady=10)
 
-    outfit_label = tk.Label(main_frame, text="Recommended Outfit: ", font=("Helvetica", 12), bg="#e0e0e0")
-    outfit_label.pack(pady=10)
+outfit_label = tk.Label(main_frame, text="Recommended Outfit: ", font=("Helvetica", 12), bg="#e0e0e0")
+outfit_label.pack(pady=10)
 
-    root.mainloop()
+root.mainloop()
 
-if __name__ == "__main__":
-    main()

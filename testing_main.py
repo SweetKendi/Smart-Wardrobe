@@ -8,7 +8,7 @@ import requests
 import random
 
 lightwear_inventory = []
-layered_inventory = []
+layered_inventory = [1,2,3,4]
 #details for Telegram bot
 bot_token = '6584510597:AAHe3yzXCntJJbuyjFrihapke83QtXl_LLc'
 chat_id = '5284112161'
@@ -31,19 +31,22 @@ def send_telegram_message(bot_token, chat_id, message):
         print(f"Failed to send message. Status code: {response.status_code}")
 
 # Function to fetch weather data
+
+
 def recommend_outfit(temperature, humidity):
     if temperature > 25 and humidity > 60:
         if lightwear_inventory:
-            recommended_outfit = lightwear_inventory[0]
+            recommended_outfit = random.choice(lightwear_inventory)
             outfit_label.config(text=f"Recommended Light-wear Outfit: {recommended_outfit}")
         else:
             outfit_label.config(text="No Light-wear outfit available in inventory")
     else:
         if layered_inventory:
-            recommended_outfit = layered_inventory[0]
-            outfit_label.config(text=f"Recommended layered Outfit: {recommended_outfit}")
+            recommended_outfit = random.choice(layered_inventory)
+            outfit_label.config(text=f"Recommended Layered Outfit: {recommended_outfit}")
         else:
             outfit_label.config(text="No layered outfit available in inventory")
+
 
 
 
